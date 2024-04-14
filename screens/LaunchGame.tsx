@@ -1,4 +1,11 @@
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native'
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View
+} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Title from '../components/ui/Title'
 import NumberContainer from '../components/game/NumberContainer'
@@ -36,6 +43,8 @@ const LaunchGame = ({
   )
   const [currentGuess, setCurrentGuess] = useState(initialGuess)
   const [guessRounds, setGuessRounds] = useState([initialGuess])
+
+  const { width } = useWindowDimensions()
 
   useEffect(() => {
     minBoundary = 1
@@ -83,9 +92,8 @@ const LaunchGame = ({
     setGuessRounds(prevGuessRounds => [newRandomNumber, ...prevGuessRounds])
   }
 
-  return (
-    <View style={styles.container}>
-      <Title>Opponent's Guess</Title>
+  let content = (
+    <>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card>
         <InstructionText style={styles.instructionText}>
@@ -104,6 +112,33 @@ const LaunchGame = ({
           </View>
         </View>
       </Card>
+    </>
+  )
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.buttonsContainerWide}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={guessNextNumber.bind(this, 'greater')}>
+              <FontAwesomeIcon icon={faPlus} color="white" size={24} />
+            </PrimaryButton>
+          </View>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={guessNextNumber.bind(this, 'lower')}>
+              <FontAwesomeIcon icon={faMinus} color="white" size={24} />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    )
+  }
+
+  return (
+    <View style={styles.container}>
+      <Title>Opponent's Guess</Title>
+      {content}
       <View style={styles.listContainer}>
         <FlatList
           data={guessRounds}
@@ -130,6 +165,10 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row'
+  },
+  buttonsContainerWide: {
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   buttonContainer: {
     flex: 1

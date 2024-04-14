@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from 'react-native'
+import { Platform, StyleSheet, Text } from 'react-native'
 import React, { PropsWithChildren } from 'react'
 
 const Title = (props: PropsWithChildren) => {
@@ -7,13 +7,15 @@ const Title = (props: PropsWithChildren) => {
 
 export default Title
 
+// const isAndroid = Platform.OS === 'android'
+
 const styles = StyleSheet.create({
   title: {
     fontFamily: 'OpenSans-Bold',
     fontSize: 24,
     color: 'white',
     textAlign: 'center',
-    borderWidth: 2,
+    borderWidth: Platform.select({ ios: 0, android: 2 }),
     borderColor: 'white',
     padding: 12,
     maxWidth: '80%',

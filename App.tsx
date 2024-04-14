@@ -1,6 +1,12 @@
 import React, { useState } from 'react'
 
-import { ImageBackground, SafeAreaView, StyleSheet, View } from 'react-native'
+import {
+  ImageBackground,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  View
+} from 'react-native'
 
 import PrepareGame from './screens/PrepareGame'
 import LinearGradient from 'react-native-linear-gradient'
@@ -44,19 +50,22 @@ function App(): React.JSX.Element {
   }
 
   return (
-    <LinearGradient
-      colors={[colors.primary700, colors.accent500]}
-      style={styles.root}
-    >
-      <ImageBackground
-        source={require('./assets/images/background.png')}
-        resizeMode="cover"
+    <>
+      <StatusBar barStyle="light-content" />
+      <LinearGradient
+        colors={[colors.primary700, colors.accent500]}
         style={styles.root}
-        imageStyle={styles.backgroundImage}
       >
-        <SafeAreaView style={styles.root}>{screen}</SafeAreaView>
-      </ImageBackground>
-    </LinearGradient>
+        <ImageBackground
+          source={require('./assets/images/background.png')}
+          resizeMode="cover"
+          style={styles.root}
+          imageStyle={styles.backgroundImage}
+        >
+          <SafeAreaView style={styles.root}>{screen}</SafeAreaView>
+        </ImageBackground>
+      </LinearGradient>
+    </>
   )
 }
 

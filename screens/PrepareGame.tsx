@@ -1,6 +1,7 @@
 import {
   Alert,
-  Dimensions,
+  KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   TextInput,
   useWindowDimensions,
@@ -46,33 +47,44 @@ const PrepareGame = (props: {
   const marginTop = height < 380 ? 30 : 100
 
   return (
-    <View style={[styles.viewContainer, { marginTop }]}>
-      <Title>Guess My Number</Title>
-      <Card>
-        <InstructionText>Enter a number</InstructionText>
-        <TextInput
-          style={styles.numberInput}
-          maxLength={2}
-          keyboardType="number-pad"
-          value={enteredNumber}
-          onChangeText={numberInputHandler}
-        />
-        <View style={styles.buttonContainer}>
-          <View style={styles.buttonViewContainer}>
-            <PrimaryButton onPress={resetEnteredNumber}>Reset</PrimaryButton>
-          </View>
-          <View style={styles.buttonViewContainer}>
-            <PrimaryButton onPress={validateEnteredText}>Confirm</PrimaryButton>
-          </View>
+    <ScrollView style={styles.keyboardView}>
+      <KeyboardAvoidingView style={styles.keyboardView} behavior="position">
+        <View style={[styles.viewContainer, { marginTop }]}>
+          <Title>Guess My Number</Title>
+          <Card>
+            <InstructionText>Enter a number</InstructionText>
+            <TextInput
+              style={styles.numberInput}
+              maxLength={2}
+              keyboardType="number-pad"
+              value={enteredNumber}
+              onChangeText={numberInputHandler}
+            />
+            <View style={styles.buttonContainer}>
+              <View style={styles.buttonViewContainer}>
+                <PrimaryButton onPress={resetEnteredNumber}>
+                  Reset
+                </PrimaryButton>
+              </View>
+              <View style={styles.buttonViewContainer}>
+                <PrimaryButton onPress={validateEnteredText}>
+                  Confirm
+                </PrimaryButton>
+              </View>
+            </View>
+          </Card>
         </View>
-      </Card>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   )
 }
 
 export default PrepareGame
 
 const styles = StyleSheet.create({
+  keyboardView: {
+    flex: 1
+  },
   viewContainer: {
     flex: 1,
     alignItems: 'center'
