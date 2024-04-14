@@ -1,4 +1,11 @@
-import { Alert, StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  Alert,
+  Dimensions,
+  StyleSheet,
+  TextInput,
+  useWindowDimensions,
+  View
+} from 'react-native'
 import React, { useState } from 'react'
 import PrimaryButton from '../components/ui/PrimaryButton'
 import { SafeParseSuccess, z } from 'zod'
@@ -11,6 +18,8 @@ const PrepareGame = (props: {
   onNumberValidated: (pickedNumber: number) => void
 }) => {
   const [enteredNumber, setEnteredNumber] = useState<string>('')
+
+  const { width, height } = useWindowDimensions()
 
   const numberSchema = z
     .union([z.string().min(1, 'Must provide a number'), z.number()])
@@ -34,8 +43,10 @@ const PrepareGame = (props: {
     props.onNumberValidated((output as SafeParseSuccess<number>).data)
   }
 
+  const marginTop = height < 380 ? 30 : 100
+
   return (
-    <View style={styles.viewContainer}>
+    <View style={[styles.viewContainer, { marginTop }]}>
       <Title>Guess My Number</Title>
       <Card>
         <InstructionText>Enter a number</InstructionText>
@@ -64,7 +75,6 @@ export default PrepareGame
 const styles = StyleSheet.create({
   viewContainer: {
     flex: 1,
-    marginTop: 100,
     alignItems: 'center'
   },
   numberInput: {
