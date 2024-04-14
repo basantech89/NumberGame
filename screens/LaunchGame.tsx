@@ -125,7 +125,8 @@ export default LaunchGame
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24
+    padding: 24,
+    alignItems: 'center'
   },
   buttonsContainer: {
     flexDirection: 'row'
