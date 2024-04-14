@@ -1,118 +1,72 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState } from 'react'
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { ImageBackground, SafeAreaView, StyleSheet, View } from 'react-native'
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import PrepareGame from './screens/PrepareGame'
+import LinearGradient from 'react-native-linear-gradient'
+import LaunchGame from './screens/LaunchGame'
+import colors from './constants/colors'
+import GameOver from './screens/GameOver'
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [userNumber, setUserNumber] = useState<number | null>(null)
+  const [isGameOver, setIsGameOver] = useState<boolean>(true)
+  const [guessRounds, setGuessRounds] = useState<number>(0)
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  const gameOver = (numberOfRounds: number) => {
+    setIsGameOver(true)
+    setGuessRounds(numberOfRounds)
+  }
+
+  const startGame = (pickedNumber: number) => {
+    setUserNumber(pickedNumber)
+    setIsGameOver(false)
+  }
+
+  const restartGame = () => {
+    setUserNumber(null)
+    setGuessRounds(0)
+  }
+
+  let screen = <PrepareGame onNumberValidated={startGame} />
+  if (userNumber) {
+    screen = <LaunchGame userNumber={userNumber} onCorrectGuess={gameOver} />
+  }
+
+  if (isGameOver && userNumber) {
+    screen = (
+      <GameOver
+        roundsNumber={guessRounds}
+        userNumber={userNumber}
+        onRestart={restartGame}
+      />
+    )
+  }
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
+    <LinearGradient
+      colors={[colors.primary700, colors.accent500]}
+      style={styles.root}
+    >
+      <ImageBackground
+        source={require('./assets/images/background.png')}
+        resizeMode="cover"
+        style={styles.root}
+        imageStyle={styles.backgroundImage}
+      >
+        <SafeAreaView style={styles.root}>{screen}</SafeAreaView>
+      </ImageBackground>
+    </LinearGradient>
+  )
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  root: {
+    flex: 1
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  backgroundImage: {
+    opacity: 0.15 // 85% transparency
+  }
+})
 
-export default App;
+export default App
